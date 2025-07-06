@@ -1,0 +1,74 @@
+import { useState } from "react";
+import { createPortal } from "react-dom";
+import type { MovieType } from "../App";
+
+type MovieCardProps = {
+  movie: {
+    adult: boolean;
+    backdrop_path: string;
+    genre_ids: number[];
+    id: number;
+    original_language: string;
+    original_title: string;
+    overview: string;
+    popularity: number;
+    poster_path: string;
+    release_date: string;
+    title: string;
+    video: boolean;
+    vote_average: number;
+    vote_count: number;
+  };
+};
+
+export default function MovieCard({ movie }: MovieCardProps) {
+  const { title, poster_path, vote_average, original_language, release_date } = movie;
+  const [selectedMovie, setSelectedMovie] = useState<MovieType | null>(null);
+  return (
+    <>
+      <article className="movie-card block cursor-pointer" onClick={() => setSelectedMovie(movie)}>
+        <div>
+          <img
+            src={poster_path ? `https://image.tmdb.org/t/p/w500/${poster_path}` : "/no-movie.png"}
+            alt=""
+            className=" aspect-[500/750]"
+          />
+        </div>
+        <div className="mt-4">
+          <h3>{title}</h3>
+          <div className="content">
+            <div className="rating">
+              <img src="/star.svg" alt="" />
+              <p>{vote_average ? vote_average.toFixed(1) : "N/A"}</p>
+            </div>
+            <span>・</span>
+            <p className="lang">{original_language}</p>
+            <span>・</span>
+            <div className="year">{release_date ? release_date.split("-")[0] + "-" + release_date.split("-")[1] : "N/A"}</div>
+          </div>
+        </div>
+      </article>
+
+      {selectedMovie &&
+        createPortal(
+          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50" onClick={() => setSelectedMovie(null)}>
+            <div className="bg-white text-black rounded-lg p-8 max-w-lg w-full relative">
+              <button className="absolute top-2 right-2 text-2xl" onClick={() => setSelectedMovie(null)}>
+                ×
+              </button>
+              <h2 className="text-2xl font-bold mb-4">{selectedMovie.title}</h2>
+              <img
+                src={`https://image.tmdb.org/t/p/w500${selectedMovie.poster_path}`}
+                alt={selectedMovie.title}
+                className="mb-4 w-full rounded aspect-[500/750]"
+              />
+              <p className="mb-2">{selectedMovie.overview}</p>
+              <p className="text-sm text-gray-600">公開日: {selectedMovie.release_date}</p>
+              {/* 必要に応じて他の情報も表示 */}
+            </div>
+          </div>,
+          document.body
+        )}
+    </>
+  );
+}
