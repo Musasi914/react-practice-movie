@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import type { MovieType } from "../App";
+import { useFavorites } from "../hooks/useFavorites";
 
 type MovieCardProps = {
   movie: {
@@ -24,6 +25,7 @@ type MovieCardProps = {
 export default function MovieCard({ movie }: MovieCardProps) {
   const { title, poster_path, vote_average, original_language, release_date } = movie;
   const [selectedMovie, setSelectedMovie] = useState<MovieType | null>(null);
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   // モーダルが開いている間、背景のスクロールを禁止
   useEffect(() => {
@@ -39,9 +41,19 @@ export default function MovieCard({ movie }: MovieCardProps) {
     };
   }, [selectedMovie]);
 
+  // お気に入り切り替え
+  const handleFavoriteToggle = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    toggleFavorite(movie);
+  };
+
   return (
     <>
-      <article className="movie-card block cursor-pointer" onClick={() => setSelectedMovie(movie)}>
+      <article className="movie-card block cursor-pointer relative" onClick={() => setSelectedMovie(movie)}>
+        {/* お気に入りボタン */}
+        <button className="absolute top-2 right-2 z-10 bg-white rounded-full p-2 cursor-pointer" onClick={handleFavoriteToggle}>
+          {isFavorite(movie.id) ? <span>❤️</span> : <span>🤍</span>}
+        </button>
         <div>
           <img
             src={poster_path ? `https://image.tmdb.org/t/p/w500/${poster_path}` : "/no-movie.png"}

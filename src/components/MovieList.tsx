@@ -2,13 +2,21 @@ import { useMemo } from "react";
 import MovieCard from "./MovieCard";
 import type { MovieType } from "../App";
 import { Button } from "./ui/button";
+import FilterPanel from "./FilterPanel";
 
 type LocalSortType = "popularity" | "vote_average" | "release_date";
+
+interface FilterOptions {
+  year: string;
+  rating: string;
+}
 
 interface MovieListProps {
   movies: MovieType[];
   currentSort: LocalSortType;
   onSortChange: (sort: LocalSortType) => void;
+  onFilterChange: (filters: FilterOptions) => void;
+  currentFilter: FilterOptions;
 }
 
 const sortMovies = (movies: MovieType[], sortType: LocalSortType): MovieType[] => {
@@ -26,10 +34,20 @@ const sortMovies = (movies: MovieType[], sortType: LocalSortType): MovieType[] =
   });
 };
 
-export default function MovieList({ movies, currentSort, onSortChange }: MovieListProps) {
+export default function MovieList({ movies, currentSort, onSortChange, onFilterChange, currentFilter }: MovieListProps) {
   const sortedMovies = useMemo(() => {
     return sortMovies(movies, currentSort);
   }, [movies, currentSort]);
+
+  const filteredMovies = useMemo(() => {
+    return sortedMovies
+      .filter((movie) => {
+        return movie.release_date.includes(currentFilter.year);
+      })
+      .filter((movie) => {
+        return movie.vote_average >= Number(currentFilter.rating);
+      });
+  }, [sortedMovies, currentFilter]);
 
   return (
     <div className="movie-list-wrapper">
@@ -46,9 +64,9 @@ export default function MovieList({ movies, currentSort, onSortChange }: MovieLi
         </Button>
       </div>
       <h2 className="mt-10">All Movies</h2>
-
+      <FilterPanel onFilterChange={onFilterChange} />
       <div className="movie-list">
-        {sortedMovies.map((movie) => (
+        {filteredMovies.map((movie) => (
           <MovieCard key={movie.id} movie={movie} />
         ))}
       </div>

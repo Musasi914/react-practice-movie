@@ -61,8 +61,12 @@
   .trending {
     @apply mt-20;
 
+    & .trending-container {
+      @apply overflow-hidden w-full;
+    }
+
     & ul {
-      @apply flex flex-row overflow-y-auto gap-5 -mt-10 w-full hide-scrollbar;
+      @apply inline-flex flex-row overflow-y-auto gap-5 -mt-10 overflow-x-auto hide-scrollbar cursor-grab;
     }
 
     & ul li {

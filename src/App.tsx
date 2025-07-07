@@ -5,6 +5,7 @@ import MovieList from "./components/MovieList";
 import FetchSortButtons from "./components/FetchSortButtons";
 import Pagination from "./components/Pagination";
 import { useMovies } from "./hooks/useMovies";
+import FavoriteList from "./components/FavoriteList";
 
 export type MovieType = {
   adult: boolean;
@@ -25,8 +26,14 @@ export type MovieType = {
 
 type LocalSortType = "popularity" | "vote_average" | "release_date";
 
+interface FilterOptions {
+  year: string;
+  rating: string;
+}
+
 export default function App() {
-  const { setSearchTerm, errorMessage, movieList, isLoading, pageNumber, currentFetchSort, handlePageMove, handleFetchSort } = useMovies();
+  const { searchTerm, setSearchTerm, errorMessage, movieList, isLoading, pageNumber, currentFetchSort, handlePageMove, handleFetchSort } =
+    useMovies();
 
   const [currentLocalSort, setCurrentLocalSort] = useState<LocalSortType>("popularity");
 
@@ -43,6 +50,15 @@ export default function App() {
     setCurrentLocalSort(localSortMap[sort]);
   };
 
+  const [currentFilter, setCurrentFilter] = useState<FilterOptions>({
+    year: "",
+    rating: "",
+  });
+
+  const handleFilterChange = (filters: FilterOptions) => {
+    setCurrentFilter(filters);
+  };
+
   return (
     <main className="bg-[#030014] text-gray-200 min-h-screen">
       <div className="pattern"></div>
@@ -54,6 +70,8 @@ export default function App() {
           </h1>
           <Search setSearchTerm={setSearchTerm} />
         </header>
+
+        {searchTerm === "" && <FavoriteList />}
 
         <section className="all-movies">
           {isLoading ? (
@@ -67,7 +85,13 @@ export default function App() {
           ) : (
             <>
               <FetchSortButtons currentSort={currentFetchSort} onSortChange={handleFetchSortWithLocalSync} />
-              <MovieList movies={movieList} currentSort={currentLocalSort} onSortChange={setCurrentLocalSort} />
+              <MovieList
+                movies={movieList}
+                currentSort={currentLocalSort}
+                onSortChange={setCurrentLocalSort}
+                onFilterChange={handleFilterChange}
+                currentFilter={currentFilter}
+              />
               <Pagination
                 currentPage={pageNumber}
                 onPageChange={handlePageMove}

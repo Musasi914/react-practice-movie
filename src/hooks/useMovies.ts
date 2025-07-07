@@ -74,6 +74,7 @@ export function useMovies() {
     setSearchTerm,
     errorMessage,
     movieList,
+    setMovieList,
     isLoading,
     pageNumber,
     currentFetchSort,
