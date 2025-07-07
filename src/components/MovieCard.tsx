@@ -82,7 +82,8 @@ export default function MovieCard({ movie }: MovieCardProps) {
               />
               <p className="mb-2">{selectedMovie.overview}</p>
               <p className="text-sm text-gray-600">公開日: {selectedMovie.release_date}</p>
-              {/* 必要に応じて他の情報も表示 */}
+              <p className="text-sm text-gray-600">評価: {selectedMovie.vote_average ? selectedMovie.vote_average.toFixed(1) : "N/A"}</p>
+              <p className="text-sm text-gray-600">人気度: {selectedMovie.popularity ? selectedMovie.popularity.toFixed(1) : "N/A"}</p>
             </div>
           </div>,
           document.body
