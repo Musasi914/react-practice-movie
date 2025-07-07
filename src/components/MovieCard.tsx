@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import type { MovieType } from "../App";
 
@@ -24,6 +24,21 @@ type MovieCardProps = {
 export default function MovieCard({ movie }: MovieCardProps) {
   const { title, poster_path, vote_average, original_language, release_date } = movie;
   const [selectedMovie, setSelectedMovie] = useState<MovieType | null>(null);
+
+  // モーダルが開いている間、背景のスクロールを禁止
+  useEffect(() => {
+    if (selectedMovie) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+
+    // クリーンアップ関数
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [selectedMovie]);
+
   return (
     <>
       <article className="movie-card block cursor-pointer" onClick={() => setSelectedMovie(movie)}>
@@ -51,9 +66,12 @@ export default function MovieCard({ movie }: MovieCardProps) {
 
       {selectedMovie &&
         createPortal(
-          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50" onClick={() => setSelectedMovie(null)}>
-            <div className="bg-white text-black rounded-lg p-8 max-w-lg w-full relative">
-              <button className="absolute top-2 right-2 text-2xl" onClick={() => setSelectedMovie(null)}>
+          <div
+            className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 overflow-y-auto p-8"
+            onClick={() => setSelectedMovie(null)}
+          >
+            <div className="bg-white text-black rounded-lg p-8 max-w-lg w-10/12 mx-auto relative h-full overflow-y-auto">
+              <button className="fixed top-2 right-2 text-4xl" onClick={() => setSelectedMovie(null)}>
                 ×
               </button>
               <h2 className="text-2xl font-bold mb-4">{selectedMovie.title}</h2>
