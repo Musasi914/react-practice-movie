@@ -22,12 +22,11 @@ export function FavoriteProvider({ children }: { children: ReactNode }) {
   // お気に入りを追加
   const addFavorite = (movie: MovieType) => {
     setFavorites((prev) => {
-      // 既に存在する場合は追加しない
+      // 重複チェック
       if (prev.some((fav) => fav.id === movie.id)) {
         return prev;
       }
       const newFavorites = [...prev, movie];
-      // ローカルストレージに保存
       localStorage.setItem("favorites", JSON.stringify(newFavorites));
       return newFavorites;
     });
@@ -37,7 +36,6 @@ export function FavoriteProvider({ children }: { children: ReactNode }) {
   const removeFavorite = (movieId: number) => {
     setFavorites((prev) => {
       const newFavorites = prev.filter((movie) => movie.id !== movieId);
-      // ローカルストレージに保存
       localStorage.setItem("favorites", JSON.stringify(newFavorites));
       return newFavorites;
     });

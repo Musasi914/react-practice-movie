@@ -55,6 +55,14 @@ export function useMovies() {
 
   const handlePageMove = (pageMove: -1 | 1) => {
     setPageNumber((prev) => Math.max(1, prev + pageMove));
+
+    // ページ切り替え時にページ上部にスクロール
+    setTimeout(() => {
+      window.scrollTo({
+        top: 800,
+        behavior: "smooth",
+      });
+    }, 100); // 少し遅延を入れて、新しいコンテンツが読み込まれてからスクロール
   };
 
   const handleFetchSort = (sort: FetchSortType) => {

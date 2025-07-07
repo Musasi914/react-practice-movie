@@ -1,7 +1,6 @@
-import { useState } from "react";
-
 interface FilterPanelProps {
   onFilterChange: (filters: FilterOptions) => void;
+  currentFilter: FilterOptions;
 }
 
 interface FilterOptions {
@@ -9,15 +8,9 @@ interface FilterOptions {
   rating: string;
 }
 
-export default function FilterPanel({ onFilterChange }: FilterPanelProps) {
-  const [filters, setFilters] = useState<FilterOptions>({
-    year: "",
-    rating: "",
-  });
-
+export default function FilterPanel({ onFilterChange, currentFilter }: FilterPanelProps) {
   const handleFilterChange = (key: keyof FilterOptions, value: string) => {
-    const newFilters = { ...filters, [key]: value };
-    setFilters(newFilters);
+    const newFilters = { ...currentFilter, [key]: value };
     onFilterChange(newFilters);
   };
 
@@ -28,7 +21,7 @@ export default function FilterPanel({ onFilterChange }: FilterPanelProps) {
         <div>
           <label className="block text-gray-300 text-sm mb-1">公開年</label>
           <select
-            value={filters.year}
+            value={currentFilter.year}
             onChange={(e) => handleFilterChange("year", e.target.value)}
             className="w-full bg-gray-800 text-white rounded px-3 py-2"
           >
@@ -44,7 +37,7 @@ export default function FilterPanel({ onFilterChange }: FilterPanelProps) {
         <div>
           <label className="block text-gray-300 text-sm mb-1">評価</label>
           <select
-            value={filters.rating}
+            value={currentFilter.rating}
             onChange={(e) => handleFilterChange("rating", e.target.value)}
             className="w-full bg-gray-800 text-white rounded px-3 py-2"
           >

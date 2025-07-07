@@ -64,7 +64,7 @@ export default function MovieList({ movies, currentSort, onSortChange, onFilterC
         </Button>
       </div>
       <h2 className="mt-10">All Movies</h2>
-      <FilterPanel onFilterChange={onFilterChange} />
+      <FilterPanel onFilterChange={onFilterChange} currentFilter={currentFilter} />
       <div className="movie-list">
         {filteredMovies.map((movie) => (
           <MovieCard key={movie.id} movie={movie} />

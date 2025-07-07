@@ -82,11 +82,14 @@ export default function MovieCard({ movie }: MovieCardProps) {
             className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 overflow-y-auto p-8"
             onClick={() => setSelectedMovie(null)}
           >
-            <div className="bg-white text-black rounded-lg p-8 max-w-lg w-10/12 mx-auto relative h-full overflow-y-auto">
-              <button className="fixed top-2 right-2 text-4xl" onClick={() => setSelectedMovie(null)}>
+            <div className="bg-white text-black rounded-lg p-8 max-w-lg md:w-10/12 mx-auto relative h-full overflow-y-auto">
+              <button
+                className="fixed top-2 right-2 text-4xl cursor-pointer text-white hover:text-gray-500 transition-colors duration-300"
+                onClick={() => setSelectedMovie(null)}
+              >
                 ×
               </button>
-              <h2 className="text-2xl font-bold mb-4">{selectedMovie.title}</h2>
+              <h2 className="text-2xl font-bold mb-4 text-black text-center">{selectedMovie.title}</h2>
               <img
                 src={`https://image.tmdb.org/t/p/w500${selectedMovie.poster_path}`}
                 alt={selectedMovie.title}

@@ -12,10 +12,14 @@ export default function Search({ setSearchTerm }: SearchProps) {
   const ref = useRef<HTMLInputElement>(null);
 
   const handleSearchClick = () => {
-    setShowSuggestions(false);
-    setSearchTerm(ref.current?.value || "");
+    const searchValue = ref.current?.value || "";
+    if (!searchValue.trim()) return;
 
-    const newHistory = [ref.current?.value || "", ...searchHistory].slice(0, 5);
+    setShowSuggestions(false);
+    setSearchTerm(searchValue);
+
+    // 重複を削除して履歴に追加
+    const newHistory = [searchValue, ...searchHistory.filter((h) => h !== searchValue)].slice(0, 5);
     setSearchHistory(newHistory);
     localStorage.setItem("searchHistory", JSON.stringify(newHistory));
   };
